@@ -81,7 +81,7 @@ void* entregador_veterano(void* arg) {
             usleep((rand() % 500 + 500) * 1000); // Pausa aleatória para evitar que o mesmo entregador tente o mesmo restaurante imediatamente
         }
     }
-    free(ctx); // Libera a memória alocada 
+    free(ctx); 
     return NULL;
 }
 
@@ -113,6 +113,6 @@ void* entregador_novato(void* arg) {
             usleep((rand() % 500 + 500) * 1000); // Pausa aleatória para evitar que o mesmo entregador tente o mesmo restaurante imediatamente
         }
     }
-    free(ctx); // Libera a memória alocada
+    free(ctx);
     return NULL; 
 }
