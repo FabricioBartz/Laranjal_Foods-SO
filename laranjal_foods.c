@@ -1,8 +1,8 @@
-#include <pthread.h> // Biblioteca para threads
-#include <stdio.h> // Biblioteca para entrada e saída
-#include <unistd.h> // Biblioteca para funções de sleep e usleep
-#include <stdlib.h> // Biblioteca para funções de alocação de memória e geração de números aleatórios
-#include <time.h> // Biblioteca para manipulação de tempo (usada para srand)
+#include <pthread.h> 
+#include <stdio.h> 
+#include <unistd.h> 
+#include <stdlib.h> 
+#include <time.h> 
 
 #define NUM_RESTAURANTES 5  // número de restaurantes
 #define NUM_ENTREGADORES 10 // número de entregadores
