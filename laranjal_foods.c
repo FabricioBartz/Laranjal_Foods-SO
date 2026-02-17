@@ -69,7 +69,7 @@ void* entregador_veterano(void* arg) {
 
         printf("[Veterano %d]: Aguardando lanche do Restaurante %d...\n", id_entregador, restaurante);
         
-        if (pthread_mutex_lock(&pedidos[restaurante]) == 0) { // Tenta pegar o lanche
+        if (pthread_mutex_trylock(&pedidos[restaurante]) == 0) { // Tenta pegar o lanche
             printf("[Veterano %d]: Entrega feita! Liberando Restaurante %d e voltando para a fila.\n", id_entregador, restaurante);
             pthread_mutex_unlock(&pedidos[restaurante]); // Libera o lanche
             pthread_mutex_unlock(&motos[restaurante]); // Libera a moto
@@ -101,7 +101,7 @@ void* entregador_novato(void* arg) {
 
         printf("[Novato %d]: Aguardando moto do Restaurante %d...\n", id_entregador, restaurante);
         
-        if (pthread_mutex_lock(&motos[restaurante]) == 0) { // Tenta pegar a moto
+        if (pthread_mutex_trylock(&motos[restaurante]) == 0) { // Tenta pegar a moto
             printf("[Novato %d]: Entrega feita! Liberando Restaurante %d e voltando para a fila.\n", id_entregador, restaurante);
             pthread_mutex_unlock(&motos[restaurante]); // Libera a moto
             pthread_mutex_unlock(&pedidos[restaurante]); // Libera o lanche
