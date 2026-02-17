@@ -55,7 +55,7 @@ int main() {
 
 // Função para os entregadores veteranos
 void* entregador_veterano(void* arg) {
-    // O entregador veterano tenta pegar a moto primeiro, depois o lanche
+    
     ContextoEntregador* ctx = (ContextoEntregador*)arg;
     int id_entregador = ctx->id;
 
@@ -69,17 +69,12 @@ void* entregador_veterano(void* arg) {
 
         printf("[Veterano %d]: Aguardando lanche do Restaurante %d...\n", id_entregador, restaurante);
         
-        if (pthread_mutex_trylock(&pedidos[restaurante]) == 0) { // Tenta pegar o lanche
-            printf("[Veterano %d]: Entrega feita! Liberando Restaurante %d e voltando para a fila.\n", id_entregador, restaurante);
-            pthread_mutex_unlock(&pedidos[restaurante]); // Libera o lanche
-            pthread_mutex_unlock(&motos[restaurante]); // Libera a moto
-            
-            usleep(500000); // Pequena pausa antes de pegar o próximo pedido
-        } else {
-            printf("[Veterano %d]: DEADLOCK! Devolvendo chave da moto do Restaurante %d para destravar.\n", id_entregador, restaurante);
-            pthread_mutex_unlock(&motos[restaurante]); // Libera a moto para evitar deadlock
-            usleep((rand() % 500 + 500) * 1000); // Pausa aleatória para evitar que o mesmo entregador tente o mesmo restaurante imediatamente
-        }
+        pthread_mutex_lock(&pedidos[restaurante]); 
+        printf("[Entregador %d]: Peguei o LANCHE %d. Saindo...\n", id_entregador, restaurante);
+
+        // Se (por milagre) ele conseguisse os dois:
+        pthread_mutex_unlock(&pedidos[restaurante]);
+        pthread_mutex_unlock(&motos[restaurante]);
     }
     free(ctx); 
     return NULL;
@@ -101,17 +96,12 @@ void* entregador_novato(void* arg) {
 
         printf("[Novato %d]: Aguardando moto do Restaurante %d...\n", id_entregador, restaurante);
         
-        if (pthread_mutex_trylock(&motos[restaurante]) == 0) { // Tenta pegar a moto
-            printf("[Novato %d]: Entrega feita! Liberando Restaurante %d e voltando para a fila.\n", id_entregador, restaurante);
-            pthread_mutex_unlock(&motos[restaurante]); // Libera a moto
-            pthread_mutex_unlock(&pedidos[restaurante]); // Libera o lanche
-            
-            usleep(500000); // Pequena pausa antes de pegar o próximo pedido
-        } else {
-            printf("[Novato %d]: DEADLOCK! Devolvendo lanche do Restaurante %d para destravar.\n", id_entregador, restaurante);
-            pthread_mutex_unlock(&pedidos[restaurante]); // Libera o lanche para evitar deadlock
-            usleep((rand() % 500 + 500) * 1000); // Pausa aleatória para evitar que o mesmo entregador tente o mesmo restaurante imediatamente
-        }
+        pthread_mutex_lock(&pedidos[restaurante]); 
+        printf("[Entregador %d]: Peguei o LANCHE %d. Saindo...\n", id_entregador, restaurante);
+
+        // Se (por milagre) ele conseguisse os dois:
+        pthread_mutex_unlock(&pedidos[restaurante]);
+        pthread_mutex_unlock(&motos[restaurante]);
     }
     free(ctx);
     return NULL; 
