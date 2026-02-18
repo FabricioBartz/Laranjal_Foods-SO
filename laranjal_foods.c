@@ -59,7 +59,7 @@ void* entregador_veterano(void* arg) {
     ContextoEntregador* ctx = (ContextoEntregador*)arg;
     int id_entregador = ctx->id;
 
-    while (1) { // Loop principal: Volta para a fila infinitamente
+    while (1) { 
         int restaurante = rand() % NUM_RESTAURANTES; // Sorteia a cada nova entrega
 
         pthread_mutex_lock(&motos[restaurante]);// Tenta pegar a moto primeiro
@@ -74,11 +74,11 @@ void* entregador_veterano(void* arg) {
             pthread_mutex_unlock(&pedidos[restaurante]); // Libera o lanche
             pthread_mutex_unlock(&motos[restaurante]); // Libera a moto
             
-            usleep(500000); // Pequena pausa antes de pegar o próximo pedido
+            
         } else {
             printf("[Veterano %d]: DEADLOCK! Devolvendo chave da moto do Restaurante %d para destravar.\n", id_entregador, restaurante);
             pthread_mutex_unlock(&motos[restaurante]); // Libera a moto para evitar deadlock
-            usleep((rand() % 500 + 500) * 1000); // Pausa aleatória para evitar que o mesmo entregador tente o mesmo restaurante imediatamente
+           
         }
     }
     free(ctx); 
@@ -87,11 +87,11 @@ void* entregador_veterano(void* arg) {
 
 // Função para os entregadores novatos
 void* entregador_novato(void* arg) {
-    // O entregador novato tenta pegar o lanche primeiro, depois a moto
+    
     ContextoEntregador* ctx = (ContextoEntregador*)arg;
     int id_entregador = ctx->id;
 
-    while (1) {  // Loop principal: Volta para a fila infinitamente
+    while (1) {  
         int restaurante = rand() % NUM_RESTAURANTES; 
 
         pthread_mutex_lock(&pedidos[restaurante]); // Tenta pegar o lanche primeiro
@@ -106,11 +106,11 @@ void* entregador_novato(void* arg) {
             pthread_mutex_unlock(&motos[restaurante]); // Libera a moto
             pthread_mutex_unlock(&pedidos[restaurante]); // Libera o lanche
             
-            usleep(500000); // Pequena pausa antes de pegar o próximo pedido
+           
         } else {
             printf("[Novato %d]: DEADLOCK! Devolvendo lanche do Restaurante %d para destravar.\n", id_entregador, restaurante);
             pthread_mutex_unlock(&pedidos[restaurante]); // Libera o lanche para evitar deadlock
-            usleep((rand() % 500 + 500) * 1000); // Pausa aleatória para evitar que o mesmo entregador tente o mesmo restaurante imediatamente
+           
         }
     }
     free(ctx);
